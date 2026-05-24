@@ -1,1214 +1,2379 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Srimathi — UI/UX Designer</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
-<style>
-:root {
-  --white: #ffffff;
-  --off: #f8f7f5;
-  --bg2: #f2f0ed;
-  --red: #e8321a;
-  --red-soft: rgba(232,50,26,0.08);
-  --black: #111010;
-  --dark: #1e1c1b;
-  --text: #2c2a28;
-  --muted: #7a7672;
-  --border: #e8e5e1;
-  --shadow: 0 2px 20px rgba(0,0,0,0.06);
-  --shadow-md: 0 8px 40px rgba(0,0,0,0.10);
-  --r: 16px;
-  --r-sm: 10px;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
-
-body {
-  background: var(--white);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
-
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 200;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 5vw;
-  height: 64px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-
-.nav-logo {
-  font-family: 'Fraunces', serif;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--black);
-  text-decoration: none;
-  letter-spacing: -0.02em;
-}
-.nav-logo span { color: var(--red); }
-
-.nav-links { display: flex; gap: 2rem; list-style: none; }
-.nav-links a {
-  font-size: 13px; font-weight: 500;
-  color: var(--muted); text-decoration: none;
-  letter-spacing: 0.02em;
-  transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--red); }
-
-.nav-right { display: flex; align-items: center; gap: 12px; }
-
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px; font-weight: 500;
-  padding: 9px 20px; border-radius: 8px;
-  border: none; cursor: pointer;
-  text-decoration: none; transition: all 0.2s;
-  letter-spacing: 0.01em;
-}
-.btn-outline {
-  background: transparent;
-  border: 1.5px solid var(--border);
-  color: var(--text);
-}
-.btn-outline:hover { border-color: var(--red); color: var(--red); }
-.btn-primary {
-  background: var(--red);
-  color: white;
-  box-shadow: 0 2px 12px rgba(232,50,26,0.25);
-}
-.btn-primary:hover { background: #c82a14; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(232,50,26,0.35); }
-
-.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-.hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
-
-/* ── HERO ── */
-.hero {
-  min-height: 100vh;
-  padding: 120px 5vw 80px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-bg {
-  position: absolute; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 50% 60% at 75% 40%, rgba(232,50,26,0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 50% at 20% 70%, rgba(232,50,26,0.03) 0%, transparent 60%);
-}
-
-.hero-dots {
-  position: absolute; inset: 0; z-index: 0;
-  background-image: radial-gradient(circle, #ddd 1px, transparent 1px);
-  background-size: 32px 32px;
-  opacity: 0.4;
-}
-
-.hero-left { position: relative; z-index: 2; }
-
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--red-soft);
-  border: 1px solid rgba(232,50,26,0.15);
-  border-radius: 100px;
-  padding: 6px 14px;
-  font-size: 12px; font-weight: 500;
-  color: var(--red);
-  letter-spacing: 0.04em;
-  margin-bottom: 1.5rem;
-  opacity: 0; animation: fadeUp 0.6s 0.1s ease forwards;
-}
-.badge-dot { width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: pulse 2s infinite; }
-
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-
-.hero-name {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(3rem, 5.5vw, 5.2rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.0;
-  color: var(--black);
-  margin-bottom: 0.5rem;
-  opacity: 0; animation: fadeUp 0.7s 0.2s ease forwards;
-}
-.hero-name .italic { font-style: italic; font-weight: 300; color: var(--red); }
-
-.hero-role {
-  font-size: 1.1rem; font-weight: 400;
-  color: var(--muted);
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.01em;
-  opacity: 0; animation: fadeUp 0.7s 0.3s ease forwards;
-}
-.hero-role strong { color: var(--text); font-weight: 500; }
-
-.hero-desc {
-  font-size: 1rem; line-height: 1.75;
-  color: var(--muted);
-  max-width: 500px;
-  margin-bottom: 2.5rem;
-  opacity: 0; animation: fadeUp 0.7s 0.4s ease forwards;
-}
-
-.hero-actions {
-  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-  margin-bottom: 3rem;
-  opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards;
-}
-
-.hero-meta {
-  display: flex; gap: 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-  opacity: 0; animation: fadeUp 0.7s 0.6s ease forwards;
-}
-
-.meta-item {}
-.meta-num {
-  font-family: 'Fraunces', serif;
-  font-size: 1.8rem; font-weight: 600;
-  letter-spacing: -0.04em;
-  color: var(--black); line-height: 1;
-}
-.meta-num span { color: var(--red); }
-.meta-label { font-size: 12px; color: var(--muted); margin-top: 3px; letter-spacing: 0.03em; }
-
-/* HERO RIGHT — card mockup */
-.hero-right {
-  position: relative; z-index: 2;
-  opacity: 0; animation: fadeUp 0.9s 0.4s ease forwards;
-}
-
-.hero-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: var(--shadow-md);
-  position: relative;
-}
-
-.hero-card-label {
-  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--muted); font-weight: 500; margin-bottom: 1.25rem;
-  display: flex; align-items: center; gap: 8px;
-}
-.hero-card-label::before { content:''; width:16px; height:1.5px; background:var(--red); }
-
-.mockup-browser {
-  background: var(--off);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  margin-bottom: 1rem;
-}
-
-.browser-bar {
-  background: var(--bg2);
-  padding: 8px 12px;
-  display: flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.browser-dots { display:flex;gap:5px; }
-.b-dot { width:8px;height:8px;border-radius:50%; }
-.b-dot:nth-child(1){background:#ff5f57}
-.b-dot:nth-child(2){background:#febc2e}
-.b-dot:nth-child(3){background:#28c840}
-
-.browser-url {
-  flex:1; background:var(--white); border-radius:6px;
-  height:22px; padding:0 10px;
-  display:flex;align-items:center;
-  font-size:10px; color:var(--muted);
-  border:1px solid var(--border);
-}
-
-.browser-body { padding: 1rem; }
-
-.dash-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-.dash-title { font-size:11px; font-weight:600; color:var(--text); }
-.dash-badge { font-size:9px; padding:2px 8px; border-radius:20px; background:rgba(232,50,26,0.1); color:var(--red); font-weight:500; }
-
-.dash-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px; }
-.dash-stat { background:var(--white); border-radius:8px; padding:8px 10px; border:1px solid var(--border); }
-.ds-num { font-size:13px; font-weight:600; color:var(--black); font-family:'Fraunces',serif; }
-.ds-label { font-size:9px; color:var(--muted); margin-top:1px; }
-
-.dash-chart {
-  background:var(--white); border-radius:8px; padding:10px;
-  border:1px solid var(--border); margin-bottom:8px;
-}
-.chart-bars { display:flex; align-items:flex-end; gap:4px; height:40px; margin-top:6px; }
-.chart-bar { flex:1; border-radius:3px 3px 0 0; background:var(--bg2); transition:background 0.2s; }
-.chart-bar.active { background:var(--red); }
-
-.dash-row { display:flex; gap:6px; }
-.dash-mini { flex:1; background:var(--white); border-radius:8px; padding:8px; border:1px solid var(--border); }
-.dm-icon { font-size:14px; margin-bottom:4px; }
-.dm-text { font-size:9px; color:var(--muted); }
-.dm-val { font-size:11px; font-weight:600; color:var(--text); }
-
-.hero-card-tools {
-  display:flex; gap:6px; flex-wrap:wrap; margin-top:1rem;
-}
-.tool-chip {
-  font-size:11px; padding:5px 12px; border-radius:20px;
-  background:var(--off); border:1px solid var(--border);
-  color:var(--muted); font-weight:400; letter-spacing:0.02em;
-}
-
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(20px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-/* ── SECTION COMMON ── */
-.section { padding: 6rem 5vw; }
-.section-alt { background: var(--off); }
-.section-dark { background: var(--dark); color: var(--white); }
-
-.section-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--red);
-  margin-bottom: 0.75rem;
-}
-.section-eyebrow::before { content:''; width:20px; height:1.5px; background:var(--red); }
-
-.section-heading {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  font-weight: 600; letter-spacing: -0.03em;
-  line-height: 1.15; color: var(--black);
-  margin-bottom: 1rem;
-}
-.section-heading .italic { font-style:italic; font-weight:300; color:var(--red); }
-.section-heading.light { color: var(--white); }
-
-.section-sub {
-  font-size: 1rem; color: var(--muted); line-height: 1.7;
-  max-width: 540px; margin-bottom: 3.5rem;
-}
-.section-sub.light { color: rgba(255,255,255,0.55); }
-
-/* ── ABOUT ── */
-.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
-
-.about-text p {
-  font-size:1rem; color:var(--muted); line-height:1.8;
-  margin-bottom:1.25rem;
-}
-.about-text p strong { color:var(--text); font-weight:500; }
-
-.about-focus {
-  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:2rem;
-}
-.focus-pill {
-  display:flex; align-items:center; gap:8px;
-  padding:10px 14px; border-radius:10px;
-  background:var(--white); border:1px solid var(--border);
-  font-size:12px; font-weight:500; color:var(--text);
-  box-shadow:var(--shadow);
-  transition:all 0.2s;
-}
-.focus-pill:hover { border-color:var(--red); color:var(--red); transform:translateY(-2px); }
-.focus-pill-icon { font-size:14px; }
-
-.about-right {}
-.about-card {
-  background:var(--white); border:1px solid var(--border);
-  border-radius:20px; padding:2rem;
-  box-shadow:var(--shadow-md);
-}
-.about-card-header {
-  display:flex; align-items:center; gap:14px; margin-bottom:1.5rem;
-  padding-bottom:1.5rem; border-bottom:1px solid var(--border);
-}
-.about-avatar {
-  width:56px; height:56px; border-radius:50%;
-  background:linear-gradient(135deg, var(--red) 0%, #ff7b5e 100%);
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Fraunces',serif; font-size:1.4rem; font-weight:600;
-  color:white; flex-shrink:0;
-}
-.about-card-name { font-family:'Fraunces',serif; font-size:1.1rem; font-weight:600; color:var(--black); }
-.about-card-role { font-size:12px; color:var(--muted); margin-top:2px; }
-
-.info-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); }
-.info-row:last-child { border-bottom:none; }
-.info-label { font-size:12px; color:var(--muted); font-weight:400; }
-.info-val { font-size:12px; color:var(--text); font-weight:500; text-align:right; }
-
-/* ── EXPERIENCE ── */
-.exp-card {
-  background:var(--white); border:1px solid var(--border);
-  border-radius:20px; padding:2.5rem;
-  box-shadow:var(--shadow);
-  display:grid; grid-template-columns:auto 1fr; gap:2rem;
-  transition:all 0.25s;
-}
-.exp-card:hover { box-shadow:var(--shadow-md); transform:translateY(-3px); border-color:rgba(232,50,26,0.2); }
-
-.exp-logo {
-  width:56px; height:56px; border-radius:14px;
-  background:linear-gradient(135deg, #1e1c1b, #3a3735);
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Fraunces',serif; font-size:1.1rem; font-weight:600;
-  color:white; flex-shrink:0;
-}
-
-.exp-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:0.5rem; gap:1rem; flex-wrap:wrap; }
-.exp-role { font-family:'Fraunces',serif; font-size:1.3rem; font-weight:600; letter-spacing:-0.02em; color:var(--black); }
-.exp-badge {
-  font-size:11px; padding:4px 12px; border-radius:20px;
-  background:rgba(232,50,26,0.08); color:var(--red);
-  font-weight:500; border:1px solid rgba(232,50,26,0.15);
-  white-space:nowrap;
-}
-.exp-company { font-size:13px; color:var(--muted); margin-bottom:1.25rem; font-weight:400; }
-.exp-company strong { color:var(--text); font-weight:500; }
-
-.exp-list { display:flex; flex-direction:column; gap:8px; }
-.exp-item {
-  display:flex; align-items:flex-start; gap:10px;
-  font-size:13px; color:var(--muted); line-height:1.6;
-}
-.exp-item::before {
-  content:''; width:5px; height:5px; border-radius:50%;
-  background:var(--red); flex-shrink:0; margin-top:7px;
-}
-
-/* ── TOOLS & SKILLS ── */
-.tools-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:3rem; }
-.tool-card {
-  background:var(--white); border:1px solid var(--border);
-  border-radius:16px; padding:1.5rem 1.25rem;
-  text-align:center; box-shadow:var(--shadow);
-  transition:all 0.2s; cursor:default;
-}
-.tool-card:hover { border-color:var(--red); transform:translateY(-4px); box-shadow:var(--shadow-md); }
-.tool-icon { font-size:2rem; margin-bottom:0.75rem; display:block; }
-.tool-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:3px; }
-.tool-type { font-size:11px; color:var(--muted); }
-
-.skills-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; }
-.skill-tag {
-  display:flex; align-items:center; gap:10px;
-  padding:12px 16px; border-radius:10px;
-  background:var(--white); border:1px solid var(--border);
-  box-shadow:var(--shadow); font-size:13px; font-weight:500; color:var(--text);
-  transition:all 0.2s;
-}
-.skill-tag:hover { border-color:var(--red); color:var(--red); }
-.skill-tag-dot { width:6px; height:6px; border-radius:50%; background:var(--red); flex-shrink:0; }
-
-/* ── PROJECTS ── */
-.projects-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
-
-.project-card {
-  background:var(--white); border:1px solid var(--border);
-  border-radius:20px; overflow:hidden;
-  box-shadow:var(--shadow); transition:all 0.3s;
-  display:flex; flex-direction:column;
-}
-.project-card:hover { box-shadow:var(--shadow-md); transform:translateY(-5px); border-color:rgba(232,50,26,0.2); }
-.project-card.featured { grid-column:span 2; display:grid; grid-template-columns:1fr 1.2fr; }
-
-.project-thumb {
-  height:220px; display:flex; align-items:center;
-  justify-content:center; position:relative; overflow:hidden;
-}
-.project-card.featured .project-thumb { height:auto; min-height:280px; }
-
-.project-thumb-inner {
-  width:100%; height:100%;
-  display:flex; align-items:center; justify-content:center;
-  padding:1.5rem; position:relative;
-}
-
-/* Doc Valet thumb */
-.thumb-docvalet {
-  background:linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 100%);
-}
-.docvalet-mock {
-  background:white; border-radius:12px; padding:14px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.12); width:100%; max-width:280px;
-  border:1px solid rgba(0,0,0,0.06);
-}
-.dv-header { display:flex;align-items:center;gap:8px;margin-bottom:12px; }
-.dv-logo { width:24px;height:24px;background:#4f6ef7;border-radius:6px; }
-.dv-title-bar { height:8px;width:80px;background:#eee;border-radius:4px; }
-.dv-files { display:grid;grid-template-columns:1fr 1fr;gap:6px; }
-.dv-file { background:#f8f9ff;border-radius:8px;padding:8px;border:1px solid #e8ecff; }
-.dv-file-icon { font-size:16px;margin-bottom:4px; }
-.dv-file-name { height:5px;background:#dde3ff;border-radius:3px;width:70%; }
-
-/* POS thumb */
-.thumb-pos { background:linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); }
-.pos-mock {
-  background:#1a1a1a; border-radius:12px; padding:14px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.4); width:100%; max-width:280px;
-  border:1px solid rgba(255,255,255,0.08);
-}
-.pos-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px; }
-.pos-title-bar { height:7px;width:80px;background:#333;border-radius:4px; }
-.pos-badge-m { width:40px;height:16px;background:rgba(232,50,26,0.3);border-radius:4px; }
-.pos-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:5px; }
-.pos-item { background:#222;border-radius:6px;padding:8px 6px;text-align:center; }
-.pos-item-icon { font-size:12px;margin-bottom:3px; }
-.pos-item-bar { height:4px;background:#333;border-radius:2px;margin:0 auto;width:70%; }
-.pos-total { margin-top:8px;background:var(--red);border-radius:6px;padding:6px 10px;display:flex;justify-content:space-between;align-items:center; }
-.pos-total-label { height:5px;width:40px;background:rgba(255,255,255,0.4);border-radius:3px; }
-.pos-total-val { height:5px;width:30px;background:rgba(255,255,255,0.8);border-radius:3px; }
-
-/* Order mgmt thumb */
-.thumb-order { background:linear-gradient(135deg, #f0fff4 0%, #e8fef0 100%); }
-.order-mock {
-  background:white; border-radius:12px; padding:14px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.10); width:100%; max-width:280px;
-  border:1px solid rgba(0,0,0,0.06);
-}
-.order-row { display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0; }
-.order-row:last-child { border-bottom:none; }
-.order-status { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
-.order-bar1 { flex:1;height:5px;background:#eee;border-radius:3px; }
-.order-bar2 { width:40px;height:5px;border-radius:3px; }
-
-/* Placeholder thumb */
-.thumb-placeholder {
-  background:linear-gradient(135deg, var(--off) 0%, var(--bg2) 100%);
-}
-.placeholder-inner { text-align:center; }
-.placeholder-icon { font-size:2.5rem; margin-bottom:0.5rem; opacity:0.4; display:block; }
-.placeholder-text { font-size:12px; color:var(--muted); font-weight:500; }
-
-.project-body { padding:1.75rem; flex:1; display:flex; flex-direction:column; }
-.project-tags { display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem; }
-.project-tag {
-  font-size:10px; padding:3px 10px; border-radius:20px;
-  background:var(--off); border:1px solid var(--border);
-  color:var(--muted); font-weight:500; letter-spacing:0.04em;
-  text-transform:uppercase;
-}
-.project-tag.red { background:var(--red-soft); border-color:rgba(232,50,26,0.15); color:var(--red); }
-
-.project-title {
-  font-family:'Fraunces',serif;
-  font-size:1.2rem; font-weight:600; letter-spacing:-0.02em;
-  color:var(--black); margin-bottom:0.5rem; line-height:1.25;
-}
-.project-desc { font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:1.5rem; flex:1; }
-
-.project-footer { display:flex;align-items:center;justify-content:space-between;margin-top:auto; flex-wrap:wrap; gap:8px; }
-.project-meta { font-size:11px;color:var(--muted); }
-.project-meta strong { color:var(--text);font-weight:500; }
-
-.project-cta {
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:12px;font-weight:500;color:var(--red);
-  text-decoration:none;
-  padding:6px 14px;border-radius:8px;
-  border:1px solid rgba(232,50,26,0.2);
-  background:var(--red-soft);
-  transition:all 0.2s;
-}
-.project-cta:hover { background:var(--red);color:white; }
-
-/* ── PROCESS ── */
-.process-steps { display:grid; grid-template-columns:repeat(7,1fr); gap:0; margin-top:3.5rem; position:relative; }
-.process-steps::before {
-  content:''; position:absolute;
-  top:28px; left:4%; right:4%; height:1.5px;
-  background:linear-gradient(90deg, var(--border), var(--border));
-  z-index:0;
-}
-
-.process-step { display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1; }
-
-.step-circle {
-  width:56px;height:56px;border-radius:50%;
-  background:var(--white);border:2px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.2rem;margin-bottom:1rem;
-  transition:all 0.25s;box-shadow:var(--shadow);
-}
-.process-step:hover .step-circle { border-color:var(--red);background:var(--red-soft);transform:scale(1.1); }
-
-.step-num {
-  font-family:'Fraunces',serif;
-  font-size:10px;font-weight:600;color:var(--red);
-  letter-spacing:0.1em;margin-bottom:4px;
-}
-.step-name { font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px; }
-.step-desc { font-size:11px;color:var(--muted);line-height:1.5;padding:0 6px; }
-
-/* ── CONTACT ── */
-.contact-grid { display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start; }
-
-.contact-info { }
-.contact-links { display:flex;flex-direction:column;gap:12px;margin-top:2rem; }
-.contact-link-item {
-  display:flex;align-items:center;gap:14px;
-  padding:14px 18px;border-radius:12px;
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);
-  text-decoration:none;transition:all 0.2s;
-}
-.contact-link-item:hover { background:rgba(232,50,26,0.1);border-color:rgba(232,50,26,0.3);transform:translateX(4px); }
-.cli-icon { width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0; }
-.cli-label { font-size:13px;font-weight:500;color:rgba(255,255,255,0.8); }
-.cli-value { font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px; }
-.cli-arrow { margin-left:auto;color:rgba(255,255,255,0.3);font-size:12px; }
-
-.contact-form { background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem; }
-.form-title { font-family:'Fraunces',serif;font-size:1.25rem;font-weight:600;color:var(--white);margin-bottom:1.5rem;letter-spacing:-0.02em; }
-
-.form-group { margin-bottom:1rem; }
-.form-label { display:block;font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:6px;letter-spacing:0.04em; }
-.form-input, .form-textarea {
-  width:100%;padding:11px 14px;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:10px;
-  font-family:'DM Sans',sans-serif;
-  font-size:13px;color:var(--white);
-  transition:border-color 0.2s;outline:none;
-  resize:none;
-}
-.form-input::placeholder, .form-textarea::placeholder { color:rgba(255,255,255,0.25); }
-.form-input:focus, .form-textarea:focus { border-color:var(--red); }
-.form-textarea { height:100px; }
-
-.form-row { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
-
-.btn-submit {
-  width:100%;padding:13px;border-radius:10px;
-  background:var(--red);color:white;border:none;
-  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
-  cursor:pointer;transition:all 0.2s;margin-top:0.5rem;
-  letter-spacing:0.01em;
-}
-.btn-submit:hover { background:#c82a14;transform:translateY(-1px); }
-
-/* ── FOOTER ── */
-footer {
-  background:var(--black);
-  padding:2rem 5vw;
-  display:flex;align-items:center;justify-content:space-between;
-  border-top:1px solid rgba(255,255,255,0.06);
-  flex-wrap:wrap;gap:1rem;
-}
-.footer-logo { font-family:'Fraunces',serif;font-size:1rem;font-weight:600;color:var(--white); }
-.footer-logo span { color:var(--red); }
-.footer-copy { font-size:12px;color:rgba(255,255,255,0.3); }
-
-/* ── DIVIDER ── */
-.divider { height:1px;background:var(--border);margin:3rem 0; }
-
-/* ── RESPONSIVE ── */
-@media(max-width:1024px){
-  .tools-grid { grid-template-columns:repeat(2,1fr); }
-  .process-steps { grid-template-columns:repeat(4,1fr);gap:1.5rem; }
-  .process-steps::before { display:none; }
-}
-
-@media(max-width:768px){
-  nav { padding:0 4vw; }
-  .nav-links { display:none; }
-  .nav-links.open {
-    display:flex;flex-direction:column;gap:0;
-    position:fixed;top:64px;left:0;right:0;
-    background:var(--white);border-bottom:1px solid var(--border);
-    padding:1rem 4vw;
-  }
-  .nav-links.open li { border-bottom:1px solid var(--border); }
-  .nav-links.open a { display:block;padding:12px 0; }
-  .hamburger { display:flex; }
-  .hero { grid-template-columns:1fr;padding:100px 4vw 60px;gap:2.5rem; }
-  .hero-name { font-size:2.6rem; }
-  .about-grid { grid-template-columns:1fr;gap:2.5rem; }
-  .exp-card { grid-template-columns:1fr; }
-  .projects-grid { grid-template-columns:1fr; }
-  .project-card.featured { grid-column:1;display:flex;flex-direction:column; }
-  .project-card.featured .project-thumb { min-height:220px; }
-  .process-steps { grid-template-columns:repeat(2,1fr);gap:1.5rem; }
-  .contact-grid { grid-template-columns:1fr; }
-  .section { padding:4rem 4vw; }
-  .hero-meta { gap:1.5rem; }
-  footer { flex-direction:column;text-align:center; }
-}
-
-@media(max-width:480px){
-  .hero-actions { flex-direction:column;align-items:flex-start; }
-  .about-focus { grid-template-columns:1fr; }
-  .tools-grid { grid-template-columns:repeat(2,1fr); }
-  .form-row { grid-template-columns:1fr; }
-  .process-steps { grid-template-columns:1fr 1fr; }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Srimathi — UI/UX Designer</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --white: #ffffff;
+      --off: #f8f7f5;
+      --bg2: #f2f0ed;
+      --red: #e8321a;
+      --red-soft: rgba(232, 50, 26, 0.08);
+      --black: #111010;
+      --dark: #1e1c1b;
+      --text: #2c2a28;
+      --muted: #7a7672;
+      --border: #e8e5e1;
+      --shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.10);
+      --r: 16px;
+      --r-sm: 10px;
+    }
+
+    .cli-icon {
+      color: #e8321a;
+      font-size: 20px;
+    }
+
+    .cli-arrow {
+      color: #e8321a;
+      font-size: 14px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--red);
+      border-radius: 2px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5vw;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--black);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span {
+      color: var(--red);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--red);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: white;
+      box-shadow: 0 2px 12px rgba(232, 50, 26, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: #c82a14;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(232, 50, 26, 0.35);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding: 120px 5vw 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 50% 60% at 75% 40%, rgba(232, 50, 26, 0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 20% 70%, rgba(232, 50, 26, 0.03) 0%, transparent 60%);
+    }
+
+    .hero-dots {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: radial-gradient(circle, #ddd 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.4;
+    }
+
+    .hero-left {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--red-soft);
+      border: 1px solid rgba(232, 50, 26, 0.15);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--red);
+      letter-spacing: 0.04em;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s ease forwards;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.8)
+      }
+    }
+
+    .hero-name {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(3rem, 5.5vw, 5.2rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      color: var(--black);
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s ease forwards;
+    }
+
+    .hero-name .italic {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--red);
+    }
+
+    .hero-role {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.01em;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.3s ease forwards;
+    }
+
+    .hero-role strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 500px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.4s ease forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s ease forwards;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.7s 0.6s ease forwards;
+    }
+
+    .meta-item {}
+
+    .meta-num {
+      font-family: 'Fraunces', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    .meta-num span {
+      color: var(--red);
+    }
+
+    .meta-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      letter-spacing: 0.03em;
+    }
+
+    /* HERO RIGHT — card mockup */
+    .hero-right {
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s ease forwards;
+    }
+
+    .hero-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .hero-card-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-card-label::before {
+      content: '';
+      width: 16px;
+      height: 1.5px;
+      background: var(--red);
+    }
+
+    .mockup-browser {
+      background: var(--off);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .browser-bar {
+      background: var(--bg2);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .b-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .b-dot:nth-child(1) {
+      background: #ff5f57
+    }
+
+    .b-dot:nth-child(2) {
+      background: #febc2e
+    }
+
+    .b-dot:nth-child(3) {
+      background: #28c840
+    }
+
+    .browser-url {
+      flex: 1;
+      background: var(--white);
+      border-radius: 6px;
+      height: 22px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      font-size: 10px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .browser-body {
+      padding: 1rem;
+    }
+
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .dash-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .dash-badge {
+      font-size: 9px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(232, 50, 26, 0.1);
+      color: var(--red);
+      font-weight: 500;
+    }
+
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .dash-stat {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+    }
+
+    .ds-num {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--black);
+      font-family: 'Fraunces', serif;
+    }
+
+    .ds-label {
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .dash-chart {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 40px;
+      margin-top: 6px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      border-radius: 3px 3px 0 0;
+      background: var(--bg2);
+      transition: background 0.2s;
+    }
+
+    .chart-bar.active {
+      background: var(--red);
+    }
+
+    .dash-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dash-mini {
+      flex: 1;
+      background: var(--white);
+      border-radius: 8px;
+      padding: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .dm-icon {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .dm-text {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .dm-val {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .hero-card-tools {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .tool-chip {
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: var(--off);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── SECTION COMMON ── */
+    .section {
+      padding: 6rem 5vw;
+    }
+
+    .section-alt {
+      background: var(--off);
+    }
+
+    .section-dark {
+      background: var(--dark);
+      color: var(--white);
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      width: 20px;
+      height: 1.5px;
+      background: var(--red);
+    }
+
+    .section-heading {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--black);
+      margin-bottom: 1rem;
+    }
+
+    .section-heading .italic {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--red);
+    }
+
+    .section-heading.light {
+      color: var(--white);
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 540px;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-sub.light {
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+    }
+
+    .about-text p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .about-focus {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 2rem;
+    }
+
+    .focus-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+    }
+
+    .focus-pill:hover {
+      border-color: var(--red);
+      color: var(--red);
+      transform: translateY(-2px);
+    }
+
+    .focus-pill-icon {
+      font-size: 14px;
+    }
+
+    .about-right {}
+
+    .about-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .about-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red) 0%, #ff7b5e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .about-card-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    .about-card-role {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .info-val {
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 500;
+      text-align: right;
+    }
+
+    /* ── EXPERIENCE ── */
+    .exp-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2rem;
+      transition: all 0.25s;
+    }
+
+    .exp-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: rgba(232, 50, 26, 0.2);
+    }
+
+    .exp-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1e1c1b, #3a3735);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .exp-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .exp-role {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--black);
+    }
+
+    .exp-badge {
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(232, 50, 26, 0.08);
+      color: var(--red);
+      font-weight: 500;
+      border: 1px solid rgba(232, 50, 26, 0.15);
+      white-space: nowrap;
+    }
+
+    .exp-company {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      font-weight: 400;
+    }
+
+    .exp-company strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .exp-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .exp-item::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--red);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    /* ── TOOLS & SKILLS ── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 3rem;
+    }
+
+    .tool-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+      cursor: default;
+    }
+
+    .tool-card:hover {
+      border-color: var(--red);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tool-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .tool-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .tool-type {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .skill-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .skill-tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      flex-shrink: 0;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-5px);
+      border-color: rgba(232, 50, 26, 0.2);
+    }
+
+    .project-card.featured {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+    }
+
+    .project-thumb {
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card.featured .project-thumb {
+      height: auto;
+      min-height: 280px;
+    }
+
+    .project-thumb-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    /* Doc Valet thumb */
+    .thumb-docvalet {
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 100%);
+    }
+
+    .docvalet-mock {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      width: 100%;
+      max-width: 280px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .dv-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .dv-logo {
+      width: 24px;
+      height: 24px;
+      background: #4f6ef7;
+      border-radius: 6px;
+    }
+
+    .dv-title-bar {
+      height: 8px;
+      width: 80px;
+      background: #eee;
+      border-radius: 4px;
+    }
+
+    .dv-files {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .dv-file {
+      background: #f8f9ff;
+      border-radius: 8px;
+      padding: 8px;
+      border: 1px solid #e8ecff;
+    }
+
+    .dv-file-icon {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .dv-file-name {
+      height: 5px;
+      background: #dde3ff;
+      border-radius: 3px;
+      width: 70%;
+    }
+
+    /* POS thumb */
+    .thumb-pos {
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+    }
+
+    .pos-mock {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 280px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .pos-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .pos-title-bar {
+      height: 7px;
+      width: 80px;
+      background: #333;
+      border-radius: 4px;
+    }
+
+    .pos-badge-m {
+      width: 40px;
+      height: 16px;
+      background: rgba(232, 50, 26, 0.3);
+      border-radius: 4px;
+    }
+
+    .pos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+
+    .pos-item {
+      background: #222;
+      border-radius: 6px;
+      padding: 8px 6px;
+      text-align: center;
+    }
+
+    .pos-item-icon {
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .pos-item-bar {
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      margin: 0 auto;
+      width: 70%;
+    }
+
+    .pos-total {
+      margin-top: 8px;
+      background: var(--red);
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pos-total-label {
+      height: 5px;
+      width: 40px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 3px;
+    }
+
+    .pos-total-val {
+      height: 5px;
+      width: 30px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 3px;
+    }
+
+    /* Order mgmt thumb */
+    .thumb-order {
+      background: linear-gradient(135deg, #f0fff4 0%, #e8fef0 100%);
+    }
+
+    .order-mock {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+      width: 100%;
+      max-width: 280px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .order-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .order-row:last-child {
+      border-bottom: none;
+    }
+
+    .order-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .order-bar1 {
+      flex: 1;
+      height: 5px;
+      background: #eee;
+      border-radius: 3px;
+    }
+
+    .order-bar2 {
+      width: 40px;
+      height: 5px;
+      border-radius: 3px;
+    }
+
+    /* Placeholder thumb */
+    .thumb-placeholder {
+      background: linear-gradient(135deg, var(--off) 0%, var(--bg2) 100%);
+    }
+
+    .placeholder-inner {
+      text-align: center;
+    }
+
+    .placeholder-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.4;
+      display: block;
+    }
+
+    .placeholder-text {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .project-body {
+      padding: 1.75rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .project-tag {
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--off);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .project-tag.red {
+      background: var(--red-soft);
+      border-color: rgba(232, 50, 26, 0.15);
+      color: var(--red);
+    }
+
+    .project-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      flex: 1;
+    }
+
+    .project-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .project-meta strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .project-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--red);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(232, 50, 26, 0.2);
+      background: var(--red-soft);
+      transition: all 0.2s;
+    }
+
+    .project-cta:hover {
+      background: var(--red);
+      color: white;
+    }
+
+    /* ── PROCESS ── */
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0;
+      margin-top: 3.5rem;
+      position: relative;
+    }
+
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: 4%;
+      right: 4%;
+      height: 1.5px;
+      background: linear-gradient(90deg, var(--border), var(--border));
+      z-index: 0;
+    }
+
+    .process-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      transition: all 0.25s;
+      box-shadow: var(--shadow);
+    }
+
+    .process-step:hover .step-circle {
+      border-color: var(--red);
+      background: var(--red-soft);
+      transform: scale(1.1);
+    }
+
+    .step-num {
+      font-family: 'Fraunces', serif;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--red);
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .step-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+      padding: 0 6px;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-info {}
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 2rem;
+    }
+
+    .contact-link-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .contact-link-item:hover {
+      background: rgba(232, 50, 26, 0.1);
+      border-color: rgba(232, 50, 26, 0.3);
+      transform: translateX(4px);
+    }
+
+    .cli-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .cli-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .cli-value {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 2px;
+    }
+
+    .cli-arrow {
+      margin-left: auto;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 12px;
+    }
+
+    .contact-form {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 2rem;
+    }
+
+    .form-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--white);
+      transition: border-color 0.2s;
+      outline: none;
+      resize: none;
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--red);
+    }
+
+    .form-textarea {
+      height: 100px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      background: var(--red);
+      color: white;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-submit:hover {
+      background: #c82a14;
+      transform: translateY(-1px);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      padding: 2rem 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .footer-logo span {
+      color: var(--red);
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1024px) {
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .process-steps {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+      }
+
+      .process-steps::before {
+        display: none;
+      }
+    }
+
+    @media(max-width:768px) {
+      nav {
+        padding: 0 4vw;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 4vw;
+      }
+
+      .nav-links.open li {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-links.open a {
+        display: block;
+        padding: 12px 0;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 100px 4vw 60px;
+        gap: 2.5rem;
+      }
+
+      .hero-name {
+        font-size: 2.6rem;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .exp-card {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card.featured {
+        grid-column: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .project-card.featured .project-thumb {
+        min-height: 220px;
+      }
+
+      .process-steps {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 4rem 4vw;
+      }
+
+      .hero-meta {
+        gap: 1.5rem;
+      }
+
+      footer {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media(max-width:480px) {
+      .hero-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .about-focus {
+        grid-template-columns: 1fr;
+      }
+
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .process-steps {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#home" class="nav-logo">Srimathi<span>.</span></a>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#process">Process</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="nav-right">
-    <a href="#" class="btn btn-outline" download>↓ Resume</a>
-    <a href="#contact" class="btn btn-primary">Let's Talk</a>
-    <div class="hamburger" id="hamburger" onclick="toggleNav()">
-      <span></span><span></span><span></span>
+  <!-- NAV -->
+  <nav>
+    <a href="#home" class="nav-logo">Srimathi<span>.</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="resume.pdf" class="btn btn-outline" target="_blank">↓ Resume</a>
+      <a href="#contact" class="btn btn-primary">Let's Talk</a>
+      <div class="hamburger" id="hamburger" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-dots"></div>
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-dots"></div>
 
-  <div class="hero-left">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      Available for Opportunities
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Available for Opportunities
+      </div>
+      <h1 class="hero-name">
+        Designing with<br>
+        <span class="italic">purpose & craft</span>
+      </h1>
+      <p class="hero-role"><strong>Srimathi</strong> · UI/UX Designer | Product Designer</p>
+      <p class="hero-desc">
+        I create user-friendly and operationally efficient digital products — from hospitality POS systems to cloud
+        platforms — grounded in research, clear thinking, and intentional design.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View Projects →</a>
+        <a href="#" class="btn btn-outline">↓ Download Resume</a>
+      </div>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-num">2<span>+</span></div>
+          <div class="meta-label">Years Experience</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-num">5<span>+</span></div>
+          <div class="meta-label">Projects Shipped</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-num">B.Tech</div>
+          <div class="meta-label">CSE Graduate</div>
+        </div>
+      </div>
     </div>
-    <h1 class="hero-name">
-      Designing with<br>
-      <span class="italic">purpose & craft</span>
-    </h1>
-    <p class="hero-role"><strong>Srimathi</strong> · UI/UX Designer | Product Designer</p>
-    <p class="hero-desc">
-      I create user-friendly and operationally efficient digital products — from hospitality POS systems to cloud platforms — grounded in research, clear thinking, and intentional design.
+
+    <div class="hero-right">
+      <div class="hero-card">
+        <div class="hero-card-label">Featured — Hospitality Dashboard UI</div>
+        <div class="mockup-browser">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <div class="b-dot"></div>
+              <div class="b-dot"></div>
+              <div class="b-dot"></div>
+            </div>
+            <div class="browser-url">lucid-pos.app/dashboard</div>
+          </div>
+          <div class="browser-body">
+            <div class="dash-header">
+              <span class="dash-title">Today's Overview</span>
+              <span class="dash-badge">Live</span>
+            </div>
+            <div class="dash-stats">
+              <div class="dash-stat">
+                <div class="ds-num">₹48K</div>
+                <div class="ds-label">Revenue</div>
+              </div>
+              <div class="dash-stat">
+                <div class="ds-num">124</div>
+                <div class="ds-label">Orders</div>
+              </div>
+              <div class="dash-stat">
+                <div class="ds-num">18</div>
+                <div class="ds-label">Tables</div>
+              </div>
+            </div>
+            <div class="dash-chart">
+              <div style="font-size:9px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;">Hourly Sales
+              </div>
+              <div class="chart-bars">
+                <div class="chart-bar" style="height:40%"></div>
+                <div class="chart-bar" style="height:55%"></div>
+                <div class="chart-bar" style="height:45%"></div>
+                <div class="chart-bar active" style="height:80%"></div>
+                <div class="chart-bar" style="height:70%"></div>
+                <div class="chart-bar" style="height:60%"></div>
+                <div class="chart-bar" style="height:90%"></div>
+                <div class="chart-bar" style="height:75%"></div>
+              </div>
+            </div>
+            <div class="dash-row">
+              <div class="dash-mini">
+                <div class="dm-icon">🍽</div>
+                <div class="dm-text">Dine-in</div>
+                <div class="dm-val">68%</div>
+              </div>
+              <div class="dash-mini">
+                <div class="dm-icon">📦</div>
+                <div class="dm-text">Takeaway</div>
+                <div class="dm-val">32%</div>
+              </div>
+              <div class="dash-mini">
+                <div class="dm-icon">⭐</div>
+                <div class="dm-text">Rating</div>
+                <div class="dm-val">4.8</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-card-tools">
+          <span class="tool-chip">Figma</span>
+          <span class="tool-chip">UX Research</span>
+          <span class="tool-chip">Design System</span>
+          <span class="tool-chip">Prototyping</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section section-alt" id="about">
+    <div class="section-eyebrow">About Me</div>
+    <h2 class="section-heading">Designing <span class="italic">experiences</span><br>that actually work</h2>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm <strong>Srimathi</strong>, a UI/UX Designer at <strong>Lucid IT Solution</strong> with 2 years of
+          hands-on experience designing hospitality and restaurant management products — including POS systems, CRM
+          platforms, online ordering systems, and operational dashboards.</p>
+        <p>I hold a <strong>B.Tech in Computer Science Engineering</strong>, which gives me a strong technical
+          foundation to collaborate effectively with developers and translate complex workflows into clean, intuitive
+          interfaces.</p>
+        <p>My design philosophy centres on <strong>operational efficiency and user clarity</strong> — making sure that
+          the people who use these products daily can do their jobs faster, with less friction and fewer errors.</p>
+
+        <div class="about-focus">
+          <div class="focus-pill"><span class="focus-pill-icon">👤</span> User-Centered Design</div>
+          <div class="focus-pill"><span class="focus-pill-icon">⚡</span> Operational Efficiency</div>
+          <div class="focus-pill"><span class="focus-pill-icon">🎨</span> Modern UI Systems</div>
+          <div class="focus-pill"><span class="focus-pill-icon">⚙️</span> Quick-Action Workflows</div>
+          <div class="focus-pill"><span class="focus-pill-icon">📐</span> Scalable Interfaces</div>
+          <div class="focus-pill"><span class="focus-pill-icon">📱</span> Responsive Design</div>
+        </div>
+      </div>
+
+      <div class="about-right">
+        <div class="about-card">
+          <div class="about-card-header">
+            <div class="about-avatar">S</div>
+            <div>
+              <div class="about-card-name">Srimathi</div>
+              <div class="about-card-role">UI/UX Designer · Product Designer</div>
+            </div>
+          </div>
+          <div class="info-row"><span class="info-label">Company</span><span class="info-val">Lucid IT Solution</span>
+          </div>
+          <div class="info-row"><span class="info-label">Experience</span><span class="info-val">2 Years</span></div>
+          <div class="info-row"><span class="info-label">Education</span><span class="info-val">B.Tech · CSE</span>
+          </div>
+          <div class="info-row"><span class="info-label">Specialisation</span><span class="info-val">Hospitality &
+              Product Design</span></div>
+          <div class="info-row"><span class="info-label">Primary Tool</span><span class="info-val">Figma</span></div>
+          <div class="info-row"><span class="info-label">Availability</span><span class="info-val"
+              style="color:var(--red);">Open to Opportunities</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <div class="section-eyebrow">Experience</div>
+    <h2 class="section-heading">Where I've <span class="italic">worked</span></h2>
+    <p class="section-sub">2 years designing enterprise-grade hospitality products that serve real operational needs.
     </p>
-    <div class="hero-actions">
-      <a href="#projects" class="btn btn-primary">View Projects →</a>
-      <a href="#" class="btn btn-outline">↓ Download Resume</a>
-    </div>
-    <div class="hero-meta">
-      <div class="meta-item">
-        <div class="meta-num">2<span>+</span></div>
-        <div class="meta-label">Years Experience</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-num">5<span>+</span></div>
-        <div class="meta-label">Projects Shipped</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-num">B.Tech</div>
-        <div class="meta-label">CSE Graduate</div>
-      </div>
-    </div>
-  </div>
 
-  <div class="hero-right">
-    <div class="hero-card">
-      <div class="hero-card-label">Featured — Hospitality Dashboard UI</div>
-      <div class="mockup-browser">
-        <div class="browser-bar">
-          <div class="browser-dots">
-            <div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div>
-          </div>
-          <div class="browser-url">lucid-pos.app/dashboard</div>
+    <div class="exp-card">
+      <div class="exp-logo">LI</div>
+      <div>
+        <div class="exp-top">
+          <div class="exp-role">UI/UX Designer</div>
+          <div class="exp-badge">2 Years · Current</div>
         </div>
-        <div class="browser-body">
-          <div class="dash-header">
-            <span class="dash-title">Today's Overview</span>
-            <span class="dash-badge">Live</span>
-          </div>
-          <div class="dash-stats">
-            <div class="dash-stat"><div class="ds-num">₹48K</div><div class="ds-label">Revenue</div></div>
-            <div class="dash-stat"><div class="ds-num">124</div><div class="ds-label">Orders</div></div>
-            <div class="dash-stat"><div class="ds-num">18</div><div class="ds-label">Tables</div></div>
-          </div>
-          <div class="dash-chart">
-            <div style="font-size:9px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;">Hourly Sales</div>
-            <div class="chart-bars">
-              <div class="chart-bar" style="height:40%"></div>
-              <div class="chart-bar" style="height:55%"></div>
-              <div class="chart-bar" style="height:45%"></div>
-              <div class="chart-bar active" style="height:80%"></div>
-              <div class="chart-bar" style="height:70%"></div>
-              <div class="chart-bar" style="height:60%"></div>
-              <div class="chart-bar" style="height:90%"></div>
-              <div class="chart-bar" style="height:75%"></div>
-            </div>
-          </div>
-          <div class="dash-row">
-            <div class="dash-mini"><div class="dm-icon">🍽</div><div class="dm-text">Dine-in</div><div class="dm-val">68%</div></div>
-            <div class="dash-mini"><div class="dm-icon">📦</div><div class="dm-text">Takeaway</div><div class="dm-val">32%</div></div>
-            <div class="dash-mini"><div class="dm-icon">⭐</div><div class="dm-text">Rating</div><div class="dm-val">4.8</div></div>
-          </div>
+        <div class="exp-company"><strong>Lucid IT Solution</strong> · Full-time · Hospitality & Product Design</div>
+        <div class="exp-list">
+          <div class="exp-item">Designed and shipped hospitality & restaurant management products including POS
+            interfaces, CRM modules, and operational dashboards</div>
+          <div class="exp-item">Created modern, high-fidelity POS interfaces focused on speed, quick billing, and table
+            management workflows</div>
+          <div class="exp-item">Redesigned CRM and campaign management modules, improving usability and reducing task
+            completion time</div>
+          <div class="exp-item">Built scalable design systems and component libraries to ensure visual consistency
+            across platforms</div>
+          <div class="exp-item">Designed responsive online ordering systems with aggregator integrations and real-time
+            order tracking</div>
+          <div class="exp-item">Conducted UX research, heuristic evaluations, and usability testing to validate design
+            decisions</div>
+          <div class="exp-item">Collaborated closely with development teams to ensure pixel-perfect implementation</div>
         </div>
       </div>
-      <div class="hero-card-tools">
-        <span class="tool-chip">Figma</span>
-        <span class="tool-chip">UX Research</span>
-        <span class="tool-chip">Design System</span>
-        <span class="tool-chip">Prototyping</span>
+    </div>
+  </section>
+
+  <!-- TOOLS & SKILLS -->
+  <section class="section section-alt" id="skills">
+    <div class="section-eyebrow">Tools & Skills</div>
+    <h2 class="section-heading">My design <span class="italic">toolkit</span></h2>
+    <p class="section-sub">The tools and skills I use to go from problem to polished product.</p>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <span class="tool-icon">🎨</span>
+        <div class="tool-name">Figma</div>
+        <div class="tool-type">Primary Design Tool</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-icon">✏️</span>
+        <div class="tool-name">Adobe XD</div>
+        <div class="tool-type">Prototyping</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-icon">🖼</span>
+        <div class="tool-name">Adobe Photoshop</div>
+        <div class="tool-type">Visual Editing</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-icon">🔷</span>
+        <div class="tool-name">Adobe Illustrator</div>
+        <div class="tool-type">Vector & Illustration</div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ABOUT -->
-<section class="section section-alt" id="about">
-  <div class="section-eyebrow">About Me</div>
-  <h2 class="section-heading">Designing <span class="italic">experiences</span><br>that actually work</h2>
-
-  <div class="about-grid">
-    <div class="about-text">
-      <p>I'm <strong>Srimathi</strong>, a UI/UX Designer at <strong>Lucid IT Solution</strong> with 2 years of hands-on experience designing hospitality and restaurant management products — including POS systems, CRM platforms, online ordering systems, and operational dashboards.</p>
-      <p>I hold a <strong>B.Tech in Computer Science Engineering</strong>, which gives me a strong technical foundation to collaborate effectively with developers and translate complex workflows into clean, intuitive interfaces.</p>
-      <p>My design philosophy centres on <strong>operational efficiency and user clarity</strong> — making sure that the people who use these products daily can do their jobs faster, with less friction and fewer errors.</p>
-
-      <div class="about-focus">
-        <div class="focus-pill"><span class="focus-pill-icon">👤</span> User-Centered Design</div>
-        <div class="focus-pill"><span class="focus-pill-icon">⚡</span> Operational Efficiency</div>
-        <div class="focus-pill"><span class="focus-pill-icon">🎨</span> Modern UI Systems</div>
-        <div class="focus-pill"><span class="focus-pill-icon">⚙️</span> Quick-Action Workflows</div>
-        <div class="focus-pill"><span class="focus-pill-icon">📐</span> Scalable Interfaces</div>
-        <div class="focus-pill"><span class="focus-pill-icon">📱</span> Responsive Design</div>
-      </div>
+    <div class="skills-grid">
+      <div class="skill-tag"><span class="skill-tag-dot"></span>UX Research</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>Wireframing</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>User Flows</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>Visual Design</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>Interaction Design</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>Design Systems</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>Responsive Design</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>Prototyping</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>Heuristic Evaluation</div>
+      <div class="skill-tag"><span class="skill-tag-dot"></span>Problem Solving</div>
     </div>
+  </section>
 
-    <div class="about-right">
-      <div class="about-card">
-        <div class="about-card-header">
-          <div class="about-avatar">S</div>
-          <div>
-            <div class="about-card-name">Srimathi</div>
-            <div class="about-card-role">UI/UX Designer · Product Designer</div>
-          </div>
-        </div>
-        <div class="info-row"><span class="info-label">Company</span><span class="info-val">Lucid IT Solution</span></div>
-        <div class="info-row"><span class="info-label">Experience</span><span class="info-val">2 Years</span></div>
-        <div class="info-row"><span class="info-label">Education</span><span class="info-val">B.Tech · CSE</span></div>
-        <div class="info-row"><span class="info-label">Specialisation</span><span class="info-val">Hospitality & Product Design</span></div>
-        <div class="info-row"><span class="info-label">Primary Tool</span><span class="info-val">Figma</span></div>
-        <div class="info-row"><span class="info-label">Availability</span><span class="info-val" style="color:var(--red);">Open to Opportunities</span></div>
-      </div>
-    </div>
-  </div>
-</section>
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="section-eyebrow">Selected Projects</div>
+    <h2 class="section-heading">Work I'm <span class="italic">proud of</span></h2>
+    <p class="section-sub">Case studies and projects spanning cloud platforms, hospitality systems, and order
+      management.</p>
 
-<!-- EXPERIENCE -->
-<section class="section" id="experience">
-  <div class="section-eyebrow">Experience</div>
-  <h2 class="section-heading">Where I've <span class="italic">worked</span></h2>
-  <p class="section-sub">2 years designing enterprise-grade hospitality products that serve real operational needs.</p>
+    <div class="projects-grid">
 
-  <div class="exp-card">
-    <div class="exp-logo">LI</div>
-    <div>
-      <div class="exp-top">
-        <div class="exp-role">UI/UX Designer</div>
-        <div class="exp-badge">2 Years · Current</div>
-      </div>
-      <div class="exp-company"><strong>Lucid IT Solution</strong> · Full-time · Hospitality & Product Design</div>
-      <div class="exp-list">
-        <div class="exp-item">Designed and shipped hospitality & restaurant management products including POS interfaces, CRM modules, and operational dashboards</div>
-        <div class="exp-item">Created modern, high-fidelity POS interfaces focused on speed, quick billing, and table management workflows</div>
-        <div class="exp-item">Redesigned CRM and campaign management modules, improving usability and reducing task completion time</div>
-        <div class="exp-item">Built scalable design systems and component libraries to ensure visual consistency across platforms</div>
-        <div class="exp-item">Designed responsive online ordering systems with aggregator integrations and real-time order tracking</div>
-        <div class="exp-item">Conducted UX research, heuristic evaluations, and usability testing to validate design decisions</div>
-        <div class="exp-item">Collaborated closely with development teams to ensure pixel-perfect implementation</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TOOLS & SKILLS -->
-<section class="section section-alt" id="skills">
-  <div class="section-eyebrow">Tools & Skills</div>
-  <h2 class="section-heading">My design <span class="italic">toolkit</span></h2>
-  <p class="section-sub">The tools and skills I use to go from problem to polished product.</p>
-
-  <div class="tools-grid">
-    <div class="tool-card">
-      <span class="tool-icon">🎨</span>
-      <div class="tool-name">Figma</div>
-      <div class="tool-type">Primary Design Tool</div>
-    </div>
-    <div class="tool-card">
-      <span class="tool-icon">✏️</span>
-      <div class="tool-name">Adobe XD</div>
-      <div class="tool-type">Prototyping</div>
-    </div>
-    <div class="tool-card">
-      <span class="tool-icon">🖼</span>
-      <div class="tool-name">Adobe Photoshop</div>
-      <div class="tool-type">Visual Editing</div>
-    </div>
-    <div class="tool-card">
-      <span class="tool-icon">🔷</span>
-      <div class="tool-name">Adobe Illustrator</div>
-      <div class="tool-type">Vector & Illustration</div>
-    </div>
-  </div>
-
-  <div class="skills-grid">
-    <div class="skill-tag"><span class="skill-tag-dot"></span>UX Research</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>Wireframing</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>User Flows</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>Visual Design</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>Interaction Design</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>Design Systems</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>Responsive Design</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>Prototyping</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>Heuristic Evaluation</div>
-    <div class="skill-tag"><span class="skill-tag-dot"></span>Problem Solving</div>
-  </div>
-</section>
-
-<!-- PROJECTS -->
-<section class="section" id="projects">
-  <div class="section-eyebrow">Selected Projects</div>
-  <h2 class="section-heading">Work I'm <span class="italic">proud of</span></h2>
-  <p class="section-sub">Case studies and projects spanning cloud platforms, hospitality systems, and order management.</p>
-
-  <div class="projects-grid">
-
-    <!-- Doc Valet — Featured -->
-    <div class="project-card featured">
-      <div class="project-thumb thumb-docvalet">
-        <div class="project-thumb-inner">
-          <div class="docvalet-mock">
-            <div class="dv-header">
-              <div class="dv-logo"></div>
-              <div class="dv-title-bar"></div>
-            </div>
-            <div class="dv-files">
-              <div class="dv-file"><div class="dv-file-icon">📄</div><div class="dv-file-name"></div></div>
-              <div class="dv-file"><div class="dv-file-icon">📊</div><div class="dv-file-name"></div></div>
-              <div class="dv-file"><div class="dv-file-icon">🖼</div><div class="dv-file-name"></div></div>
-              <div class="dv-file"><div class="dv-file-icon">📁</div><div class="dv-file-name"></div></div>
+      <!-- Doc Valet — Featured -->
+      <div class="project-card featured">
+        <div class="project-thumb thumb-docvalet">
+          <div class="project-thumb-inner">
+            <div class="docvalet-mock">
+              <div class="dv-header">
+                <div class="dv-logo"></div>
+                <div class="dv-title-bar"></div>
+              </div>
+              <div class="dv-files">
+                <div class="dv-file">
+                  <div class="dv-file-icon">📄</div>
+                  <div class="dv-file-name"></div>
+                </div>
+                <div class="dv-file">
+                  <div class="dv-file-icon">📊</div>
+                  <div class="dv-file-name"></div>
+                </div>
+                <div class="dv-file">
+                  <div class="dv-file-icon">🖼</div>
+                  <div class="dv-file-name"></div>
+                </div>
+                <div class="dv-file">
+                  <div class="dv-file-icon">📁</div>
+                  <div class="dv-file-name"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="project-body">
-        <div class="project-tags">
-          <span class="project-tag red">Personal Project</span>
-          <span class="project-tag">Product Design</span>
-          <span class="project-tag">Mobile + Web</span>
-        </div>
-        <div class="project-title">Doc Valet — Cloud Document Management Platform</div>
-        <p class="project-desc">A modern document management and cloud storage application designed to help users securely store, organise, access, and manage files from anywhere. Covers secure login, dashboard with storage overview, file upload/download/share, smart folder organisation, search & filter, and a fully responsive UI.</p>
-        <div class="project-footer">
-          <div class="project-meta"><strong>Role:</strong> End-to-End Product Design &nbsp;·&nbsp; <strong>Duration:</strong> 6 Weeks</div>
-          <a href="#" class="project-cta">View Case Study →</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- POS -->
-    <div class="project-card">
-      <div class="project-thumb thumb-pos">
-        <div class="project-thumb-inner">
-          <div class="pos-mock">
-            <div class="pos-header">
-              <div class="pos-title-bar"></div>
-              <div class="pos-badge-m"></div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="project-tag red">Personal Project</span>
+            <span class="project-tag">Product Design</span>
+            <span class="project-tag">Mobile + Web</span>
+          </div>
+          <div class="project-title">Doc Valet — Cloud Document Management Platform</div>
+          <p class="project-desc">A modern document management and cloud storage application designed to help users
+            securely store, organise, access, and manage files from anywhere. Covers secure login, dashboard with
+            storage overview, file upload/download/share, smart folder organisation, search & filter, and a fully
+            responsive UI.</p>
+          <div class="project-footer">
+            <div class="project-meta"><strong>Role:</strong> End-to-End Product Design &nbsp;·&nbsp;
+              <strong>Duration:</strong> 6 Weeks
             </div>
-            <div class="pos-grid">
-              <div class="pos-item"><div class="pos-item-icon">🍛</div><div class="pos-item-bar"></div></div>
-              <div class="pos-item"><div class="pos-item-icon">🍹</div><div class="pos-item-bar"></div></div>
-              <div class="pos-item"><div class="pos-item-icon">🍰</div><div class="pos-item-bar"></div></div>
-              <div class="pos-item"><div class="pos-item-icon">🍜</div><div class="pos-item-bar"></div></div>
-              <div class="pos-item"><div class="pos-item-icon">🥗</div><div class="pos-item-bar"></div></div>
-              <div class="pos-item"><div class="pos-item-icon">☕</div><div class="pos-item-bar"></div></div>
+            <a href="#" class="project-cta">View Case Study →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- POS -->
+      <div class="project-card">
+        <div class="project-thumb thumb-pos">
+          <div class="project-thumb-inner">
+            <div class="pos-mock">
+              <div class="pos-header">
+                <div class="pos-title-bar"></div>
+                <div class="pos-badge-m"></div>
+              </div>
+              <div class="pos-grid">
+                <div class="pos-item">
+                  <div class="pos-item-icon">🍛</div>
+                  <div class="pos-item-bar"></div>
+                </div>
+                <div class="pos-item">
+                  <div class="pos-item-icon">🍹</div>
+                  <div class="pos-item-bar"></div>
+                </div>
+                <div class="pos-item">
+                  <div class="pos-item-icon">🍰</div>
+                  <div class="pos-item-bar"></div>
+                </div>
+                <div class="pos-item">
+                  <div class="pos-item-icon">🍜</div>
+                  <div class="pos-item-bar"></div>
+                </div>
+                <div class="pos-item">
+                  <div class="pos-item-icon">🥗</div>
+                  <div class="pos-item-bar"></div>
+                </div>
+                <div class="pos-item">
+                  <div class="pos-item-icon">☕</div>
+                  <div class="pos-item-bar"></div>
+                </div>
+              </div>
+              <div class="pos-total">
+                <div class="pos-total-label"></div>
+                <div class="pos-total-val"></div>
+              </div>
             </div>
-            <div class="pos-total">
-              <div class="pos-total-label"></div>
-              <div class="pos-total-val"></div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="project-tag red">Lucid IT Solution</span>
+            <span class="project-tag">Redesign</span>
+            <span class="project-tag">Enterprise</span>
+          </div>
+          <div class="project-title">Hospitality POS System Redesign</div>
+          <p class="project-desc">Redesigned a restaurant POS interface focusing on quick billing, table management,
+            order summary, and payment flows. Improved operational efficiency through fast-access actions and a clean
+            information hierarchy.</p>
+          <div class="project-footer">
+            <div class="project-meta"><strong>Role:</strong> UI/UX Designer &nbsp;·&nbsp; <strong>Type:</strong>
+              Redesign</div>
+            <a href="#" class="project-cta">View Case Study →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Mgmt -->
+      <div class="project-card">
+        <div class="project-thumb thumb-order">
+          <div class="project-thumb-inner">
+            <div class="order-mock">
+              <div style="font-size:10px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">Order Management</div>
+              <div class="order-row">
+                <div class="order-status" style="background:#28c840"></div>
+                <div class="order-bar1"></div>
+                <div class="order-bar2" style="background:#e8fef0"></div>
+              </div>
+              <div class="order-row">
+                <div class="order-status" style="background:var(--red)"></div>
+                <div class="order-bar1"></div>
+                <div class="order-bar2" style="background:#fff0ee"></div>
+              </div>
+              <div class="order-row">
+                <div class="order-status" style="background:#febc2e"></div>
+                <div class="order-bar1"></div>
+                <div class="order-bar2" style="background:#fffbee"></div>
+              </div>
+              <div class="order-row">
+                <div class="order-status" style="background:#4f6ef7"></div>
+                <div class="order-bar1"></div>
+                <div class="order-bar2" style="background:#f0f3ff"></div>
+              </div>
+              <div class="order-row">
+                <div class="order-status" style="background:#28c840"></div>
+                <div class="order-bar1"></div>
+                <div class="order-bar2" style="background:#e8fef0"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="project-body">
-        <div class="project-tags">
-          <span class="project-tag red">Lucid IT Solution</span>
-          <span class="project-tag">Redesign</span>
-          <span class="project-tag">Enterprise</span>
-        </div>
-        <div class="project-title">Hospitality POS System Redesign</div>
-        <p class="project-desc">Redesigned a restaurant POS interface focusing on quick billing, table management, order summary, and payment flows. Improved operational efficiency through fast-access actions and a clean information hierarchy.</p>
-        <div class="project-footer">
-          <div class="project-meta"><strong>Role:</strong> UI/UX Designer &nbsp;·&nbsp; <strong>Type:</strong> Redesign</div>
-          <a href="#" class="project-cta">View Case Study →</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Order Mgmt -->
-    <div class="project-card">
-      <div class="project-thumb thumb-order">
-        <div class="project-thumb-inner">
-          <div class="order-mock">
-            <div style="font-size:10px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">Order Management</div>
-            <div class="order-row"><div class="order-status" style="background:#28c840"></div><div class="order-bar1"></div><div class="order-bar2" style="background:#e8fef0"></div></div>
-            <div class="order-row"><div class="order-status" style="background:var(--red)"></div><div class="order-bar1"></div><div class="order-bar2" style="background:#fff0ee"></div></div>
-            <div class="order-row"><div class="order-status" style="background:#febc2e"></div><div class="order-bar1"></div><div class="order-bar2" style="background:#fffbee"></div></div>
-            <div class="order-row"><div class="order-status" style="background:#4f6ef7"></div><div class="order-bar1"></div><div class="order-bar2" style="background:#f0f3ff"></div></div>
-            <div class="order-row"><div class="order-status" style="background:#28c840"></div><div class="order-bar1"></div><div class="order-bar2" style="background:#e8fef0"></div></div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="project-tag red">Lucid IT Solution</span>
+            <span class="project-tag">Dashboard</span>
+            <span class="project-tag">SaaS</span>
+          </div>
+          <div class="project-title">Online Order Management System</div>
+          <p class="project-desc">Designed an online food ordering and order management platform with real-time order
+            tracking, status management, aggregator integrations, and a responsive management dashboard focused on
+            operational clarity.</p>
+          <div class="project-footer">
+            <div class="project-meta"><strong>Role:</strong> UI/UX Designer &nbsp;·&nbsp; <strong>Type:</strong> Product
+              Design</div>
+            <a href="#" class="project-cta">View Case Study →</a>
           </div>
         </div>
       </div>
-      <div class="project-body">
-        <div class="project-tags">
-          <span class="project-tag red">Lucid IT Solution</span>
-          <span class="project-tag">Dashboard</span>
-          <span class="project-tag">SaaS</span>
-        </div>
-        <div class="project-title">Online Order Management System</div>
-        <p class="project-desc">Designed an online food ordering and order management platform with real-time order tracking, status management, aggregator integrations, and a responsive management dashboard focused on operational clarity.</p>
-        <div class="project-footer">
-          <div class="project-meta"><strong>Role:</strong> UI/UX Designer &nbsp;·&nbsp; <strong>Type:</strong> Product Design</div>
-          <a href="#" class="project-cta">View Case Study →</a>
-        </div>
-      </div>
-    </div>
 
-    <!-- Upcoming 1 -->
-    <div class="project-card">
-      <div class="project-thumb thumb-placeholder">
-        <div class="project-thumb-inner">
-          <div class="placeholder-inner">
-            <span class="placeholder-icon">🔮</span>
-            <div class="placeholder-text">Coming Soon</div>
+      <!-- Upcoming 1 -->
+      <div class="project-card">
+        <div class="project-thumb thumb-placeholder">
+          <div class="project-thumb-inner">
+            <div class="placeholder-inner">
+              <span class="placeholder-icon">🔮</span>
+              <div class="placeholder-text">Coming Soon</div>
+            </div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="project-tag">Upcoming</span>
+          </div>
+          <div class="project-title">Upcoming Case Study</div>
+          <p class="project-desc">New product design case study coming soon. Currently in progress — will be published
+            shortly.</p>
+          <div class="project-footer">
+            <div class="project-meta" style="color:var(--muted)">In Progress</div>
           </div>
         </div>
       </div>
-      <div class="project-body">
-        <div class="project-tags">
-          <span class="project-tag">Upcoming</span>
-        </div>
-        <div class="project-title">Upcoming Case Study</div>
-        <p class="project-desc">New product design case study coming soon. Currently in progress — will be published shortly.</p>
-        <div class="project-footer">
-          <div class="project-meta" style="color:var(--muted)">In Progress</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Upcoming 2 -->
-    <div class="project-card">
-      <div class="project-thumb thumb-placeholder" style="background:linear-gradient(135deg,#f0f4ff,#e8ecff)">
-        <div class="project-thumb-inner">
-          <div class="placeholder-inner">
-            <span class="placeholder-icon">✨</span>
-            <div class="placeholder-text">Coming Soon</div>
+      <!-- Upcoming 2 -->
+      <div class="project-card">
+        <div class="project-thumb thumb-placeholder" style="background:linear-gradient(135deg,#f0f4ff,#e8ecff)">
+          <div class="project-thumb-inner">
+            <div class="placeholder-inner">
+              <span class="placeholder-icon">✨</span>
+              <div class="placeholder-text">Coming Soon</div>
+            </div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="project-tag">Upcoming</span>
+          </div>
+          <div class="project-title">Future Work Showcase</div>
+          <p class="project-desc">Reserved space for an upcoming project. Stay tuned — more case studies are in the
+            pipeline.</p>
+          <div class="project-footer">
+            <div class="project-meta" style="color:var(--muted)">In Progress</div>
           </div>
         </div>
       </div>
-      <div class="project-body">
-        <div class="project-tags">
-          <span class="project-tag">Upcoming</span>
-        </div>
-        <div class="project-title">Future Work Showcase</div>
-        <p class="project-desc">Reserved space for an upcoming project. Stay tuned — more case studies are in the pipeline.</p>
-        <div class="project-footer">
-          <div class="project-meta" style="color:var(--muted)">In Progress</div>
-        </div>
+
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section section-alt" id="process">
+    <div class="section-eyebrow">Design Process</div>
+    <h2 class="section-heading">How I <span class="italic">think & work</span></h2>
+    <p class="section-sub">A structured, iterative approach — from understanding the problem to delivering the final
+      design.</p>
+
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-circle">🔍</div>
+        <div class="step-num">01</div>
+        <div class="step-name">Research</div>
+        <div class="step-desc">User interviews, competitive analysis & stakeholder mapping</div>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">🎯</div>
+        <div class="step-num">02</div>
+        <div class="step-name">Define</div>
+        <div class="step-desc">Problem identification, personas & clear design goals</div>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">✏️</div>
+        <div class="step-num">03</div>
+        <div class="step-name">Wireframe</div>
+        <div class="step-desc">Sketches, low-fi wireframes & information architecture</div>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">🎨</div>
+        <div class="step-num">04</div>
+        <div class="step-name">UI Exploration</div>
+        <div class="step-desc">Visual design, components & design system creation</div>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">⚡</div>
+        <div class="step-num">05</div>
+        <div class="step-name">Prototype</div>
+        <div class="step-desc">Interactive prototypes & micro-interaction design</div>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">🧪</div>
+        <div class="step-num">06</div>
+        <div class="step-name">User Testing</div>
+        <div class="step-desc">Usability testing, feedback loops & iteration</div>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">🚀</div>
+        <div class="step-num">07</div>
+        <div class="step-name">Final Design</div>
+        <div class="step-desc">Handoff-ready files, specs & developer collaboration</div>
       </div>
     </div>
+  </section>
 
-  </div>
-</section>
+  <!-- CONTACT -->
+  <section class="section section-dark" id="contact">
+    <div class="section-eyebrow" style="color:rgba(232,50,26,0.8)">Contact</div>
+    <h2 class="section-heading light">Let's <span class="italic" style="color:var(--red)">work together</span></h2>
+    <p class="section-sub light">Open to full-time roles, freelance projects, and design collaborations. Let's build
+      something great.</p>
 
-<!-- PROCESS -->
-<section class="section section-alt" id="process">
-  <div class="section-eyebrow">Design Process</div>
-  <h2 class="section-heading">How I <span class="italic">think & work</span></h2>
-  <p class="section-sub">A structured, iterative approach — from understanding the problem to delivering the final design.</p>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-links">
 
-  <div class="process-steps">
-    <div class="process-step">
-      <div class="step-circle">🔍</div>
-      <div class="step-num">01</div>
-      <div class="step-name">Research</div>
-      <div class="step-desc">User interviews, competitive analysis & stakeholder mapping</div>
-    </div>
-    <div class="process-step">
-      <div class="step-circle">🎯</div>
-      <div class="step-num">02</div>
-      <div class="step-name">Define</div>
-      <div class="step-desc">Problem identification, personas & clear design goals</div>
-    </div>
-    <div class="process-step">
-      <div class="step-circle">✏️</div>
-      <div class="step-num">03</div>
-      <div class="step-name">Wireframe</div>
-      <div class="step-desc">Sketches, low-fi wireframes & information architecture</div>
-    </div>
-    <div class="process-step">
-      <div class="step-circle">🎨</div>
-      <div class="step-num">04</div>
-      <div class="step-name">UI Exploration</div>
-      <div class="step-desc">Visual design, components & design system creation</div>
-    </div>
-    <div class="process-step">
-      <div class="step-circle">⚡</div>
-      <div class="step-num">05</div>
-      <div class="step-name">Prototype</div>
-      <div class="step-desc">Interactive prototypes & micro-interaction design</div>
-    </div>
-    <div class="process-step">
-      <div class="step-circle">🧪</div>
-      <div class="step-num">06</div>
-      <div class="step-name">User Testing</div>
-      <div class="step-desc">Usability testing, feedback loops & iteration</div>
-    </div>
-    <div class="process-step">
-      <div class="step-circle">🚀</div>
-      <div class="step-num">07</div>
-      <div class="step-name">Final Design</div>
-      <div class="step-desc">Handoff-ready files, specs & developer collaboration</div>
-    </div>
-  </div>
-</section>
+          <!-- Email -->
+          <a href="mailto:srisri302001@gmail.com" class="contact-link-item">
+            <i class="fa-regular fa-envelope cli-icon"></i>
 
-<!-- CONTACT -->
-<section class="section section-dark" id="contact">
-  <div class="section-eyebrow" style="color:rgba(232,50,26,0.8)">Contact</div>
-  <h2 class="section-heading light">Let's <span class="italic" style="color:var(--red)">work together</span></h2>
-  <p class="section-sub light">Open to full-time roles, freelance projects, and design collaborations. Let's build something great.</p>
+            <div>
+              <div class="cli-label">Email</div>
+              <div class="cli-value">srisri302001@gmail.com</div>
+            </div>
 
-  <div class="contact-grid">
-    <div class="contact-info">
-      <div class="contact-links">
-        <a href="mailto:srimathi@example.com" class="contact-link-item">
-          <div class="cli-icon">✉️</div>
-          <div><div class="cli-label">Email</div><div class="cli-value">srimathi@example.com</div></div>
-          <div class="cli-arrow">↗</div>
-        </a>
-        <a href="#" class="contact-link-item">
-          <div class="cli-icon">💼</div>
-          <div><div class="cli-label">LinkedIn</div><div class="cli-value">linkedin.com/in/srimathi</div></div>
-          <div class="cli-arrow">↗</div>
-        </a>
-        <a href="#" class="contact-link-item">
-          <div class="cli-icon">🎨</div>
-          <div><div class="cli-label">Behance</div><div class="cli-value">behance.net/srimathi</div></div>
-          <div class="cli-arrow">↗</div>
-        </a>
-        <a href="#" class="contact-link-item">
-          <div class="cli-icon">📁</div>
-          <div><div class="cli-label">Figma Portfolio</div><div class="cli-value">View on Figma Community</div></div>
-          <div class="cli-arrow">↗</div>
-        </a>
+            <i class="fa-solid fa-arrow-up-right-from-square cli-arrow"></i>
+          </a>
+
+          <!-- LinkedIn -->
+          <a href="https://www.linkedin.com/in/srimathi30" target="_blank" class="contact-link-item">
+            <i class="fa-brands fa-linkedin-in cli-icon"></i>
+
+            <div>
+              <div class="cli-label">LinkedIn</div>
+              <div class="cli-value">www.linkedin.com/in/srimathi30</div>
+            </div>
+
+            <i class="fa-solid fa-arrow-up-right-from-square cli-arrow"></i>
+          </a>
+
+          <!-- Behance -->
+          <a href="https://www.behance.net/Srimathi30" target="_blank" class="contact-link-item">
+            <i class="fa-brands fa-behance cli-icon"></i>
+
+            <div>
+              <div class="cli-label">Behance</div>
+              <div class="cli-value">https://www.behance.net/Srimathi30</div>
+            </div>
+
+            <i class="fa-solid fa-arrow-up-right-from-square cli-arrow"></i>
+          </a>
+
+
+
+
+
+        </div>
       </div>
-    </div>
 
-    <div class="contact-form">
-      <div class="form-title">Send a message</div>
-      <div class="form-row">
+
+
+
+      <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+
+        <!-- Web3Forms Access Key -->
+        <input type="hidden" name="access_key" value="8418b7cf-6b85-4d45-a159-162e1eccab54">
+
+        <div class="form-title">Send a message</div>
+
+        <div class="form-row">
+
+          <!-- Name -->
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input class="form-input" type="text" name="name" placeholder="Your name" required>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" name="email" placeholder="your@email.com" required>
+          </div>
+
+        </div>
+
+        <!-- Subject -->
         <div class="form-group">
-          <label class="form-label">Name</label>
-          <input class="form-input" type="text" placeholder="Your name"/>
+          <label class="form-label">Subject</label>
+          <input class="form-input" type="text" name="subject" placeholder="What's this about?" required>
         </div>
+
+        <!-- Message -->
         <div class="form-group">
-          <label class="form-label">Email</label>
-          <input class="form-input" type="email" placeholder="your@email.com"/>
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" name="message" placeholder="Tell me about your project or opportunity..."
+            required></textarea>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Subject</label>
-        <input class="form-input" type="text" placeholder="What's this about?"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Message</label>
-        <textarea class="form-textarea" placeholder="Tell me about your project or opportunity..."></textarea>
-      </div>
-      <button class="btn-submit" onclick="handleSubmit(this)">Send Message →</button>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit">
+          Send Message
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+      </form>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="footer-logo">Srimathi<span>.</span></div>
-  <div class="footer-copy">© 2024 · UI/UX Designer · Lucid IT Solution · B.Tech CSE</div>
-</footer>
+  <footer>
+    <div class="footer-logo">Srimathi<span>.</span></div>
+    <div class="footer-copy">© 2024 · UI/UX Designer · Lucid IT Solution · B.Tech CSE</div>
+  </footer>
 
-<script>
-// Mobile nav toggle
-function toggleNav() {
-  const nav = document.getElementById('navLinks');
-  nav.classList.toggle('open');
-}
-
-// Close nav on link click
-document.querySelectorAll('.nav-links a').forEach(a => {
-  a.addEventListener('click', () => {
-    document.getElementById('navLinks').classList.remove('open');
-  });
-});
-
-// Nav active scroll highlight
-const navLinks = document.querySelectorAll('.nav-links a');
-const sections = document.querySelectorAll('section[id]');
-
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 100) current = s.id;
-  });
-  navLinks.forEach(a => {
-    a.style.color = a.getAttribute('href') === '#' + current ? 'var(--red)' : '';
-  });
-});
-
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
+  <script>
+    // Mobile nav toggle
+    function toggleNav() {
+      const nav = document.getElementById('navLinks');
+      nav.classList.toggle('open');
     }
-  });
-}, { threshold: 0.12 });
 
-document.querySelectorAll('.exp-card, .project-card, .tool-card, .skill-tag, .process-step, .focus-pill, .about-card').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(24px)';
-  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-  observer.observe(el);
-});
+    // Close nav on link click
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
 
-// Form submit
-function handleSubmit(btn) {
-  btn.textContent = 'Message Sent ✓';
-  btn.style.background = '#28c840';
-  setTimeout(() => {
-    btn.textContent = 'Send Message →';
-    btn.style.background = '';
-  }, 3000);
-}
-</script>
+    // Nav active scroll highlight
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = document.querySelectorAll('section[id]');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 100) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--red)' : '';
+      });
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.exp-card, .project-card, .tool-card, .skill-tag, .process-step, .focus-pill, .about-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(24px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(el);
+    });
+
+    // Form submit
+    function handleSubmit(btn) {
+      btn.textContent = 'Message Sent ✓';
+      btn.style.background = '#28c840';
+      setTimeout(() => {
+        btn.textContent = 'Send Message →';
+        btn.style.background = '';
+      }, 3000);
+    }
+  </script>
 </body>
+
 </html>
